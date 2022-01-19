@@ -14,7 +14,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
 
@@ -38,17 +37,13 @@ public class PhotoUserGatewayImpl implements PhotoUserGateway, UserPhotoService 
                 .bodyToMono(UserPhotoResponse.class);
     }
 
-//    @Override
-//    public Mono<Void> getUserPhoto(String idPhoto, ServerWebExchange serverWebExchange) {
-//        return userStoragePhotoClient.get()
-//                .uri(uriBuilder -> uriBuilder.path("/{id}/").build(idPhoto))
-//                .retrieve()
-//                .bodyToMono(Disposable.class)
-//                .map(x -> {
-//                    serverWebExchange.getResponse().writeWith()
-//                })
-//
-//    }
+    @Override
+    public Mono<Void> getUserPhoto(String idPhoto, ServerWebExchange serverWebExchange) {
+        return userStoragePhotoClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/{id}/").build(idPhoto))
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
 
     private MultiValueMap<String, HttpEntity<?>> builder(FilePart filePart) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();

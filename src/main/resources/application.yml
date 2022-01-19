@@ -14,3 +14,20 @@ user:
     readTimeout: ${USER_INFO_SERVICE_READ_TIMEOUT:1000}
     writeTimeout: ${USER_INFO_SERVICE_WRITE_TIMEOUT:1000}
     option: ${USER_INFO_SERVICE_OPTION:1000}
+
+spring:
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_CLIENT_URL:http://localhost:8081}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  file:
+    name: logs/client.log
+    path: logs

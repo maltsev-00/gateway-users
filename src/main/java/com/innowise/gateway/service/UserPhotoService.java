@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserPhotoService {
 
-//    Mono<Void> getUserPhoto(String idPhoto, ServerWebExchange serverWebExchange);
+    Mono<Void> getUserPhoto(String idPhoto, ServerWebExchange serverWebExchange);
 }

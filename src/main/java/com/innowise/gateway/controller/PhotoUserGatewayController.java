@@ -18,11 +18,11 @@ public class PhotoUserGatewayController {
 
     private final UserPhotoService userPhotoService;
 
-//    @GetMapping("{idPhoto}")
-//    public Mono<Void> getUserPhoto(@PathVariable("idPhoto") String idPhoto, ServerWebExchange serverWebExchange) {
-//        return userPhotoService.getUserPhoto(idPhoto,serverWebExchange)
-//                .doOnSuccess(success -> log.debug("getUserPhoto success"))
-//                .doOnError(error -> log.error("getUserPhoto error"));
-//    }
+    @GetMapping("{idPhoto}")
+    public Mono<Void> getUserPhoto(@PathVariable("idPhoto") String idPhoto, ServerWebExchange serverWebExchange) {
+        return userPhotoService.getUserPhoto(idPhoto,serverWebExchange)
+                .doOnSuccess(success -> log.debug("getUserPhoto success"))
+                .doOnError(error -> log.error("getUserPhoto error"));
+    }
 
 }
