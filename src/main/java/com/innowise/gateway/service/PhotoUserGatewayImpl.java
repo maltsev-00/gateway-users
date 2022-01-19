@@ -1,6 +1,6 @@
 package com.innowise.gateway.service;
 
-import com.innowise.gateway.exception.UsersInfoApiException;
+import com.innowise.gateway.exception.UserPhotoStorageApiException;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.response.UserPhotoResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
+
 @Service
-public class PhotoUserGatewayImpl implements PhotoUserGateway {
+public class PhotoUserGatewayImpl implements PhotoUserGateway, UserPhotoService {
 
     private final WebClient userStoragePhotoClient;
 
@@ -31,9 +34,21 @@ public class PhotoUserGatewayImpl implements PhotoUserGateway {
                 .body(BodyInserters.fromMultipartData(builder(saveUserPhotoRequest.getFilePart())))
                 .retrieve()
                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
-                        .flatMap(message -> Mono.error(new UsersInfoApiException(message))))
+                        .flatMap(message -> Mono.error(new UserPhotoStorageApiException(message))))
                 .bodyToMono(UserPhotoResponse.class);
     }
+
+//    @Override
+//    public Mono<Void> getUserPhoto(String idPhoto, ServerWebExchange serverWebExchange) {
+//        return userStoragePhotoClient.get()
+//                .uri(uriBuilder -> uriBuilder.path("/{id}/").build(idPhoto))
+//                .retrieve()
+//                .bodyToMono(Disposable.class)
+//                .map(x -> {
+//                    serverWebExchange.getResponse().writeWith()
+//                })
+//
+//    }
 
     private MultiValueMap<String, HttpEntity<?>> builder(FilePart filePart) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();

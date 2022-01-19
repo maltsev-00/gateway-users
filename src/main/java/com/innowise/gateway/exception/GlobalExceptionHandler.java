@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         return buildResponse(message, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UsersInfoApiException.class)
+    @ExceptionHandler({UsersInfoApiException.class, UserPhotoStorageApiException.class})
     public Mono<ResponseEntity<ErrorDetails>> handleNotFoundResourceStatusException(UsersInfoApiException exception) {
         String message = exception.getMessage();
         log.error(message);
