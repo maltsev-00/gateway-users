@@ -7,7 +7,7 @@ user:
       url: ${USER_STORAGE_PHOTO_SERVICE_BASE_URL:http://localhost:8082/photo}
       readTimeout: ${USER_STORAGE_SERVICE_READ_TIMEOUT:1000}
       writeTimeout: ${USER_STORAGE_SERVICE_WRITE_TIMEOUT:1000}
-      ption: ${USER_STORAGE_SERVICE_OPTION:1000}
+      option: ${USER_STORAGE_SERVICE_OPTION:1000}
 
   info:
     url: ${USER_INFO_SERVICE_BASE_URL:http://localhost:8080/users}
