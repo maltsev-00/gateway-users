@@ -2,8 +2,10 @@ package com.innowise.gateway.service;
 
 import com.innowise.gateway.exception.UserPhotoStorageApiException;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
+import com.innowise.gateway.model.response.PhotoResponse;
 import com.innowise.gateway.model.response.UserPhotoResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -42,7 +45,11 @@ public class PhotoUserGatewayImpl implements PhotoUserGateway, UserPhotoService 
         return userStoragePhotoClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/{id}/").build(idPhoto))
                 .retrieve()
-                .bodyToMono(Void.class);
+                .bodyToMono(PhotoResponse.class)
+                .flatMap(response -> {
+                    DataBuffer buffer = serverWebExchange.getResponse().bufferFactory().wrap(response.getBytes());
+                    return serverWebExchange.getResponse().writeWith(Flux.just(buffer));
+                });
     }
 
     private MultiValueMap<String, HttpEntity<?>> builder(FilePart filePart) {

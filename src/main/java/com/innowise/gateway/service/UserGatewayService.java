@@ -7,6 +7,7 @@ import com.innowise.gateway.model.request.UserSaveRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserGatewayService {
@@ -18,4 +19,6 @@ public interface UserGatewayService {
     Mono<Void> deleteUser(UUID id);
 
     Mono<UUID> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest);
+
+    Flux<UUID> saveUsers(List<UserSaveRequest> userSaveRequests);
 }

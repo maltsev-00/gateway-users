@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -77,5 +78,14 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                                         .flatMap(message -> Mono.error(new UsersInfoApiException(message))))
                                 .bodyToMono(UUID.class));
+    }
+
+    @Override
+    public Flux<UUID> saveUsers(List<UserSaveRequest> userSaveRequests) {
+        return userInfoClient.post()
+                .uri(uriBuilder -> uriBuilder.path("/list").build())
+                .body(BodyInserters.fromValue(userSaveRequests))
+                .retrieve()
+                .bodyToFlux(UUID.class);
     }
 }

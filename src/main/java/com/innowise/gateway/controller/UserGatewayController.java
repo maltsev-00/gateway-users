@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -52,5 +53,12 @@ public class UserGatewayController {
                         .build())
                 .doOnSuccess(success -> log.debug("saveUserPhoto success"))
                 .doOnError(error -> log.error("saveUserPhoto error: {}", error.getMessage()));
+    }
+
+    @PostMapping("/list")
+    public Flux<UUID> saveUsers(@Valid @RequestBody List<UserSaveRequest> userSaveRequests) {
+        return userGatewayService.saveUsers(userSaveRequests)
+                .doOnComplete(() -> log.debug("saveUsers() success"))
+                .doOnError(error -> log.error("saveUsers() error"));
     }
 }
