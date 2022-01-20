@@ -1,6 +1,7 @@
 package com.innowise.gateway.service;
 
 import com.innowise.gateway.exception.UsersInfoApiException;
+import com.innowise.gateway.model.dto.AuditUserDto;
 import com.innowise.gateway.model.dto.UserDto;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.request.UserRequest;
@@ -21,9 +22,11 @@ public class UserGatewayServiceImpl implements UserGatewayService {
 
     private final WebClient userInfoClient;
     private final PhotoUserGateway photoUserGateway;
+    private final AuditProducerService auditProducerService;
 
-    public UserGatewayServiceImpl(@Qualifier("userInfo") WebClient userInfoClient, PhotoUserGateway photoUserGateway) {
+    public UserGatewayServiceImpl(@Qualifier("userInfo") WebClient userInfoClient, PhotoUserGateway photoUserGateway, AuditProducerService auditProducerService) {
         this.userInfoClient = userInfoClient;
+        this.auditProducerService = auditProducerService;
         this.photoUserGateway = photoUserGateway;
     }
 
@@ -53,7 +56,16 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                 .retrieve()
                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                         .flatMap(message -> Mono.error(new UsersInfoApiException(message))))
-                .bodyToMono(UUID.class);
+                .bodyToMono(UUID.class)
+                .map(response -> {
+                    auditProducerService.send(
+                            AuditUserDto.builder()
+                                    .response(response.toString())
+                                    .action("saveUser")
+                                    .build()
+                    ).subscribe();
+                    return response;
+                });
     }
 
     @Override
@@ -61,7 +73,16 @@ public class UserGatewayServiceImpl implements UserGatewayService {
         return userInfoClient.delete()
                 .uri(uriBuilder -> uriBuilder.path("/{id}/").build(id))
                 .retrieve()
-                .bodyToMono(Void.class);
+                .bodyToMono(Void.class)
+                .map(response -> {
+                    auditProducerService.send(
+                                    AuditUserDto.builder()
+                                            .response(response.toString())
+                                            .action("deleteUser")
+                                            .build())
+                            .subscribe();
+                    return response;
+                });
     }
 
     @Override
@@ -77,7 +98,16 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                                 .retrieve()
                                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                                         .flatMap(message -> Mono.error(new UsersInfoApiException(message))))
-                                .bodyToMono(UUID.class));
+                                .bodyToMono(UUID.class))
+                .map(response -> {
+                    auditProducerService.send(
+                                    AuditUserDto.builder()
+                                            .response(response.toString())
+                                            .action("saveUserPhoto")
+                                            .build())
+                            .subscribe();
+                    return response;
+                });
     }
 
     @Override
@@ -86,6 +116,15 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                 .uri(uriBuilder -> uriBuilder.path("/list").build())
                 .body(BodyInserters.fromValue(userSaveRequests))
                 .retrieve()
-                .bodyToFlux(UUID.class);
+                .bodyToFlux(UUID.class)
+                .map(response -> {
+                    auditProducerService.send(
+                                    AuditUserDto.builder()
+                                            .response(response.toString())
+                                            .action("saveUsers")
+                                            .build())
+                            .subscribe();
+                    return response;
+                });
     }
 }
