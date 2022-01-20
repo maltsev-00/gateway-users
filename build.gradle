@@ -33,6 +33,9 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-actuator:${actuator}"
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
 
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'io.projectreactor.kafka:reactor-kafka:1.2.2.RELEASE'
+
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}",
 			"org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"

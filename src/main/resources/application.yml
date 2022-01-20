@@ -16,6 +16,16 @@ user:
     option: ${USER_INFO_SERVICE_OPTION:1000}
 
 spring:
+  kafka:
+    bootstrap-servers: ${AUDIT_PRODUCER_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+kafka:
+  properties:
+    topic: ${AUDIT_TOPIC:audit}
+
   boot:
     admin:
       client:
