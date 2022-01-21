@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuditProducerService<T> {
+public class AuditProducerService {
 
     private final ReactiveKafkaProducerTemplate<String, String> reactiveKafkaProducerTemplate;
     private final KafkaProducerProperties kafkaProducerProperties;
@@ -23,7 +23,7 @@ public class AuditProducerService<T> {
     public Mono<Void> send(AuditUserDto auditUserDto) {
         try {
             return reactiveKafkaProducerTemplate.send(kafkaProducerProperties.getTopic(), objectMapper.writeValueAsString(auditUserDto))
-                    .doOnSuccess(senderResult -> log.debug("producer sent {}", auditUserDto))
+                    .doOnSuccess(senderResult -> log.info("sent {} offset : {}", auditUserDto, senderResult.recordMetadata().offset()))
                     .then();
         } catch (JsonProcessingException e) {
             throw new JsonParserException(e.getMessage());

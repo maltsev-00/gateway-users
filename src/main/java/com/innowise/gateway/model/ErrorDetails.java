@@ -1,13 +1,17 @@
 package com.innowise.gateway.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Value
 public class ErrorDetails {
-    LocalDateTime timestamp;
-    String error;
+    private LocalDateTime timestamp;
+    private String error;
 }

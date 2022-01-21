@@ -15,7 +15,7 @@ import reactor.netty.tcp.TcpClient;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class UserInfoWebClientConfiguration {
+public class WebClientConfiguration {
 
     @Bean(name = "userInfo")
     public WebClient userInfoWebClient(UserInfoProperties userInfoProperties) {

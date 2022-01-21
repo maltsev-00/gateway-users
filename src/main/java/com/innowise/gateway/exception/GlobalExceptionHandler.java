@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
@@ -29,11 +30,22 @@ public class GlobalExceptionHandler {
         return buildResponse(message, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UsersInfoApiException.class, UserPhotoStorageApiException.class, JsonParserException.class})
-    public Mono<ResponseEntity<ErrorDetails>> handleNotFoundResourceStatusException(UsersInfoApiException exception) {
+    @ExceptionHandler(JsonParserException.class)
+    public Mono<ResponseEntity<ErrorDetails>> handle(UsersInfoApiException exception) {
         String message = exception.getMessage();
         log.error(message);
         return buildResponse(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({UsersInfoApiException.class, UserPhotoStorageApiException.class})
+    public Mono<ResponseEntity<ErrorDetails>> handleGetResourceException(ResponseStatusException exception) {
+        String message = exception.getReason();
+        assert message != null;
+        if (message.isEmpty()) {
+            message = INTERNAL_SERVER_MESSAGE;
+        }
+        log.error(message);
+        return buildResponse(message, exception.getStatus());
     }
 
     @ExceptionHandler(Throwable.class)
