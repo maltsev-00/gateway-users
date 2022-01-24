@@ -13,8 +13,7 @@ import java.util.Map;
 public class ReactiveKafkaProducerConfig {
     @Bean
     public ReactiveKafkaProducerTemplate<String, String> reactiveKafkaProducerTemplate(KafkaProperties properties) {
-        Map<String, Object> props = properties
-                .buildProducerProperties();
+        Map<String, Object> props = properties.buildProducerProperties();
         return new ReactiveKafkaProducerTemplate<>(SenderOptions.create(props));
     }
 }

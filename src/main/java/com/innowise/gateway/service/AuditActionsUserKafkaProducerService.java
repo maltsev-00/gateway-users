@@ -2,7 +2,7 @@ package com.innowise.gateway.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innowise.gateway.config.properties.KafkaProducerProperties;
+import com.innowise.gateway.config.properties.AuditUserActionsProperties;
 import com.innowise.gateway.exception.JsonParserException;
 import com.innowise.gateway.model.dto.AuditUserDto;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +14,16 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuditProducerService {
+public class AuditActionsUserKafkaProducerService {
 
     private final ReactiveKafkaProducerTemplate<String, String> reactiveKafkaProducerTemplate;
-    private final KafkaProducerProperties kafkaProducerProperties;
+    private final AuditUserActionsProperties auditUserActionsProperties;
     private final ObjectMapper objectMapper;
 
     public Mono<Void> send(AuditUserDto auditUserDto) {
         try {
-            return reactiveKafkaProducerTemplate.send(kafkaProducerProperties.getTopic(), objectMapper.writeValueAsString(auditUserDto))
-                    .doOnSuccess(senderResult -> log.info("sent {} offset : {}", auditUserDto, senderResult.recordMetadata().offset()))
+            return reactiveKafkaProducerTemplate.send(auditUserActionsProperties.getTopic(), objectMapper.writeValueAsString(auditUserDto))
+                    .doOnSuccess(senderResult -> log.info("sent {} ", auditUserDto))
                     .then();
         } catch (JsonProcessingException e) {
             throw new JsonParserException(e.getMessage());

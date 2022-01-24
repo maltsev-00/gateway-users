@@ -5,11 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("user.info")
+@ConfigurationProperties("kafka.properties")
 @Data
-public class UserInfoProperties {
-    private String url;
-    private int readTimeout;
-    private int writeTimeout;
-    private int option;
+public class AuditUserActionsProperties {
+    private String topic;
 }

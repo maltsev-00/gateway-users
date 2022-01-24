@@ -5,8 +5,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("kafka.properties")
+@ConfigurationProperties("user.photo.storage")
 @Data
-public class KafkaProducerProperties {
-    private String topic;
+public class UserPhotoStorageApplicationProperties {
+    private String url;
+    private int readTimeout;
+    private int writeTimeout;
+    private int option;
 }

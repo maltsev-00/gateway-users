@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("user.photo.storage")
+@ConfigurationProperties("user.info")
 @Data
-public class UserPhotoStorageProperties {
+public class UserInfoApplicationProperties {
     private String url;
     private int readTimeout;
     private int writeTimeout;

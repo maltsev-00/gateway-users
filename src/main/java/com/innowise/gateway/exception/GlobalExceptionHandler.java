@@ -31,13 +31,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JsonParserException.class)
-    public Mono<ResponseEntity<ErrorDetails>> handle(UsersInfoApiException exception) {
+    public Mono<ResponseEntity<ErrorDetails>> handle(UserInfoApplicationException exception) {
         String message = exception.getMessage();
         log.error(message);
         return buildResponse(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({UsersInfoApiException.class, UserPhotoStorageApiException.class})
+    @ExceptionHandler({UserInfoApplicationException.class, UserPhotoStorageApiException.class})
     public Mono<ResponseEntity<ErrorDetails>> handleGetResourceException(ResponseStatusException exception) {
         String message = exception.getReason();
         assert message != null;

@@ -1,7 +1,7 @@
 package com.innowise.gateway.config;
 
-import com.innowise.gateway.config.properties.UserInfoProperties;
-import com.innowise.gateway.config.properties.UserPhotoStorageProperties;
+import com.innowise.gateway.config.properties.UserInfoApplicationProperties;
+import com.innowise.gateway.config.properties.UserPhotoStorageApplicationProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 public class WebClientConfiguration {
 
     @Bean(name = "userInfo")
-    public WebClient userInfoWebClient(UserInfoProperties userInfoProperties) {
-        return getWebClient(userInfoProperties.getOption(), userInfoProperties.getReadTimeout(), userInfoProperties.getWriteTimeout(), userInfoProperties.getUrl());
+    public WebClient userInfoWebClient(UserInfoApplicationProperties userInfoApplicationProperties) {
+        return getWebClient(userInfoApplicationProperties.getOption(), userInfoApplicationProperties.getReadTimeout(), userInfoApplicationProperties.getWriteTimeout(), userInfoApplicationProperties.getUrl());
     }
 
     @Bean(name = "userStoragePhoto")
-    public WebClient userPhotoStorageWebClient(UserPhotoStorageProperties userPhotoStorageProperties) {
-        return getWebClient(userPhotoStorageProperties.getOption(), userPhotoStorageProperties.getReadTimeout(), userPhotoStorageProperties.getWriteTimeout(), userPhotoStorageProperties.getUrl());
+    public WebClient userPhotoStorageWebClient(UserPhotoStorageApplicationProperties userPhotoStorageApplicationProperties) {
+        return getWebClient(userPhotoStorageApplicationProperties.getOption(), userPhotoStorageApplicationProperties.getReadTimeout(), userPhotoStorageApplicationProperties.getWriteTimeout(), userPhotoStorageApplicationProperties.getUrl());
     }
 
     private WebClient getWebClient(int option, int readTimeout, int writeTimeout, String url) {
