@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuditActionsUserKafkaProducerService {
+public class AuditActionsUserKafkaProducer {
 
     private final ReactiveKafkaProducerTemplate<String, String> reactiveKafkaProducerTemplate;
     private final AuditUserActionsProperties auditUserActionsProperties;

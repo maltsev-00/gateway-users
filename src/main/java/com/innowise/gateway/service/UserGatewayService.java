@@ -4,6 +4,7 @@ import com.innowise.gateway.model.dto.UserDto;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.request.UserRequest;
 import com.innowise.gateway.model.request.UserSaveRequest;
+import com.innowise.gateway.model.response.UserPhotoResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +19,7 @@ public interface UserGatewayService {
 
     Mono<Void> deleteUser(UUID id);
 
-    Mono<UUID> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest);
+    Mono<UUID> saveUserPhoto(Mono<UserPhotoResponse> userPhotoResponseMono, SaveUserPhotoRequest saveUserPhotoRequest);
 
     Flux<UUID> saveUsers(List<UserSaveRequest> userSaveRequests);
 }

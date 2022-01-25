@@ -2,11 +2,11 @@ package com.innowise.gateway.service;
 
 import com.innowise.gateway.exception.UserInfoApplicationException;
 import com.innowise.gateway.model.ErrorDetails;
-import com.innowise.gateway.model.dto.AuditUserDto;
 import com.innowise.gateway.model.dto.UserDto;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.request.UserRequest;
 import com.innowise.gateway.model.request.UserSaveRequest;
+import com.innowise.gateway.model.response.UserPhotoResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,9 @@ import java.util.UUID;
 public class UserGatewayServiceImpl implements UserGatewayService {
 
     private final WebClient userInfoClient;
-    private final PhotoUserGateway photoUserGateway;
-    private final AuditActionsUserKafkaProducerService auditActionsUserKafkaProducerService;
 
-    public UserGatewayServiceImpl(@Qualifier("userInfo") WebClient userInfoClient,
-                                  PhotoUserGateway photoUserGateway,
-                                  AuditActionsUserKafkaProducerService auditActionsUserKafkaProducerService) {
+    public UserGatewayServiceImpl(@Qualifier("userInfo") WebClient userInfoClient) {
         this.userInfoClient = userInfoClient;
-        this.auditActionsUserKafkaProducerService = auditActionsUserKafkaProducerService;
-        this.photoUserGateway = photoUserGateway;
     }
 
     @Override
@@ -69,8 +63,7 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                                 .flatMap(body -> Mono.error(new UserInfoApplicationException(status)));
                     }
                     return clientResponse.bodyToMono(UUID.class);
-                })
-                .doOnNext(response -> auditActionsUserKafkaProducerService.send(AuditUserDto.builder().response(response.toString()).action("saveUser").build()).subscribe());
+                });
     }
 
     @Override
@@ -88,15 +81,12 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                                 .flatMap(body -> Mono.error(new UserInfoApplicationException(status)));
                     }
                     return clientResponse.bodyToMono(Void.class);
-                })
-                .doOnSuccess(response -> {
-                    auditActionsUserKafkaProducerService.send(AuditUserDto.builder().response(response.toString()).action("deleteUser").build()).subscribe();
                 });
     }
 
     @Override
-    public Mono<UUID> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest) {
-        return photoUserGateway.saveUserPhoto(saveUserPhotoRequest)
+    public Mono<UUID> saveUserPhoto(Mono<UserPhotoResponse> userPhotoResponseMono,SaveUserPhotoRequest saveUserPhotoRequest) {
+        return userPhotoResponseMono
                 .flatMap(userPhotoResponse ->
                         userInfoClient.put()
                                 .uri(builder -> builder
@@ -111,14 +101,6 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                                                 .flatMap(body -> Mono.error(new UserInfoApplicationException(HttpStatus.INTERNAL_SERVER_ERROR)));
                                     }
                                     return clientResponse.bodyToMono(UUID.class);
-                                })
-                                .map(response -> {
-                                    auditActionsUserKafkaProducerService.send(
-                                                    AuditUserDto.builder()
-                                                            .response(response.toString())
-                                                            .action("saveUserPhoto")
-                                                            .build()).subscribe();
-                                    return response;
                                 }));
     }
 
@@ -128,16 +110,7 @@ public class UserGatewayServiceImpl implements UserGatewayService {
                 .uri(uriBuilder -> uriBuilder.path("/list").build())
                 .body(BodyInserters.fromValue(userSaveRequests))
                 .retrieve()
-                .bodyToFlux(UUID.class)
-                .map(response -> {
-                    auditActionsUserKafkaProducerService.send(
-                                    AuditUserDto.builder()
-                                            .response(response.toString())
-                                            .action("saveUsers")
-                                            .build())
-                            .subscribe();
-                    return response;
-                });
+                .bodyToFlux(UUID.class);
     }
 
 }
