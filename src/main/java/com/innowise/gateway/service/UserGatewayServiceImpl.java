@@ -85,23 +85,21 @@ public class UserGatewayServiceImpl implements UserGatewayService {
     }
 
     @Override
-    public Mono<UUID> saveUserPhoto(Mono<UserPhotoResponse> userPhotoResponseMono,SaveUserPhotoRequest saveUserPhotoRequest) {
-        return userPhotoResponseMono
-                .flatMap(userPhotoResponse ->
-                        userInfoClient.put()
-                                .uri(builder -> builder
-                                        .queryParam("idUser", "{idUser}")
-                                        .queryParam("idPhoto", "{idPhoto}")
-                                        .build(saveUserPhotoRequest.getIdUser(),
-                                                userPhotoResponse.getIdUserPhoto()))
-                                .exchangeToMono(clientResponse -> {
-                                    HttpStatus status = clientResponse.statusCode();
-                                    if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status) || status.isError()) {
-                                        return clientResponse.bodyToMono(String.class)
-                                                .flatMap(body -> Mono.error(new UserInfoApplicationException(HttpStatus.INTERNAL_SERVER_ERROR)));
-                                    }
-                                    return clientResponse.bodyToMono(UUID.class);
-                                }));
+    public Mono<UUID> saveUserPhoto(UserPhotoResponse userPhotoResponseMono, SaveUserPhotoRequest saveUserPhotoRequest) {
+        return userInfoClient.put()
+                .uri(builder -> builder
+                        .queryParam("idUser", "{idUser}")
+                        .queryParam("idPhoto", "{idPhoto}")
+                        .build(saveUserPhotoRequest.getIdUser(),
+                                userPhotoResponseMono.getIdUserPhoto()))
+                .exchangeToMono(clientResponse -> {
+                    HttpStatus status = clientResponse.statusCode();
+                    if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status) || status.isError()) {
+                        return clientResponse.bodyToMono(String.class)
+                                .flatMap(body -> Mono.error(new UserInfoApplicationException(HttpStatus.INTERNAL_SERVER_ERROR)));
+                    }
+                    return clientResponse.bodyToMono(UUID.class);
+                });
     }
 
     @Override

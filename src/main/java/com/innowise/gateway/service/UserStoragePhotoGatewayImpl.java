@@ -21,11 +21,11 @@ import reactor.core.publisher.Mono;
 
 
 @Service
-public class PhotoUserGatewayImpl implements PhotoUserGateway, UserPhotoService {
+public class UserStoragePhotoGatewayImpl implements UserStoragePhotoGateway, UserPhotoService {
 
     private final WebClient userStoragePhotoClient;
 
-    public PhotoUserGatewayImpl(@Qualifier("userStoragePhoto") WebClient userStoragePhotoClient) {
+    public UserStoragePhotoGatewayImpl(@Qualifier("userStoragePhoto") WebClient userStoragePhotoClient) {
         this.userStoragePhotoClient = userStoragePhotoClient;
     }
 

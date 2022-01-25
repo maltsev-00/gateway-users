@@ -19,7 +19,7 @@ public class UserFactoryService {
 
     private final UserGatewayService userGatewayService;
     private final AuditActionsUserKafkaProducer auditActionsUserKafkaProducer;
-    private final PhotoUserGateway photoUserGateway;
+    private final UserStoragePhotoGateway userStoragePhotoGateway;
 
     public Flux<UserDto> getUsers(UserRequest userRequest) {
         return userGatewayService.getUsers(userRequest)
@@ -52,11 +52,12 @@ public class UserFactoryService {
     }
 
     public Mono<UUID> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest) {
-        return userGatewayService.saveUserPhoto(photoUserGateway.saveUserPhoto(saveUserPhotoRequest), saveUserPhotoRequest)
-                .doOnSuccess(response -> auditActionsUserKafkaProducer.send(
+        return userStoragePhotoGateway.saveUserPhoto(saveUserPhotoRequest)
+                .flatMap(userPhotoResponse -> userGatewayService.saveUserPhoto(userPhotoResponse, saveUserPhotoRequest))
+                .doOnSuccess(success -> auditActionsUserKafkaProducer.send(
                                 AuditUserDto.builder()
                                         .action("saveUserPhoto")
-                                        .response(response.toString())
+                                        .response(success.toString())
                                         .build())
                         .subscribe());
     }

@@ -19,7 +19,7 @@ public interface UserGatewayService {
 
     Mono<Void> deleteUser(UUID id);
 
-    Mono<UUID> saveUserPhoto(Mono<UserPhotoResponse> userPhotoResponseMono, SaveUserPhotoRequest saveUserPhotoRequest);
+    Mono<UUID> saveUserPhoto(UserPhotoResponse userPhotoResponseMono, SaveUserPhotoRequest saveUserPhotoRequest);
 
     Flux<UUID> saveUsers(List<UserSaveRequest> userSaveRequests);
 }
