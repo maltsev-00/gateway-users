@@ -4,7 +4,7 @@ import com.innowise.gateway.exception.UserPhotoStorageApiException;
 import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.response.PhotoResponse;
 import com.innowise.gateway.model.response.UserPhotoResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -21,16 +21,13 @@ import reactor.core.publisher.Mono;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserStoragePhotoGatewayImpl implements UserStoragePhotoGateway, UserPhotoService {
 
     private final WebClient userStoragePhotoClient;
 
-    public UserStoragePhotoGatewayImpl(@Qualifier("userStoragePhoto") WebClient userStoragePhotoClient) {
-        this.userStoragePhotoClient = userStoragePhotoClient;
-    }
-
     @Override
-    public Mono<UserPhotoResponse> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest) {
+    public Mono<UserPhotoResponse> savePhoto(SaveUserPhotoRequest saveUserPhotoRequest) {
         return userStoragePhotoClient.post()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(builder(saveUserPhotoRequest.getFilePart())))

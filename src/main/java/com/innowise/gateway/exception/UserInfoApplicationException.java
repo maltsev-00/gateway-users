@@ -5,7 +5,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class UserInfoApplicationException extends ResponseStatusException {
 
-
     public UserInfoApplicationException(HttpStatus status) {
         super(status);
     }

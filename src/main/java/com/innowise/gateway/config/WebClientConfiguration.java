@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebClientConfiguration {
 
-    @Bean(name = "userInfo")
+    @Bean(name = "userInfoClient")
     public WebClient userInfoWebClient(UserInfoApplicationProperties userInfoApplicationProperties) {
         return getWebClient(userInfoApplicationProperties.getOption(), userInfoApplicationProperties.getReadTimeout(), userInfoApplicationProperties.getWriteTimeout(), userInfoApplicationProperties.getUrl());
     }
 
-    @Bean(name = "userStoragePhoto")
+    @Bean(name = "userStoragePhotoClient")
     public WebClient userPhotoStorageWebClient(UserPhotoStorageApplicationProperties userPhotoStorageApplicationProperties) {
         return getWebClient(userPhotoStorageApplicationProperties.getOption(), userPhotoStorageApplicationProperties.getReadTimeout(), userPhotoStorageApplicationProperties.getWriteTimeout(), userPhotoStorageApplicationProperties.getUrl());
     }

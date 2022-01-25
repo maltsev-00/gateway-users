@@ -7,6 +7,7 @@ import com.innowise.gateway.model.request.SaveUserPhotoRequest;
 import com.innowise.gateway.model.request.UserRequest;
 import com.innowise.gateway.model.request.UserSaveRequest;
 import com.innowise.gateway.model.response.UserPhotoResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class UserGatewayServiceImpl implements UserGatewayService {
 
     private final WebClient userInfoClient;
-
-    public UserGatewayServiceImpl(@Qualifier("userInfo") WebClient userInfoClient) {
-        this.userInfoClient = userInfoClient;
-    }
 
     @Override
     public Flux<UserDto> getUsers(UserRequest userRequest) {

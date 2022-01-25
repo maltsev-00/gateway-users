@@ -22,14 +22,14 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-kafka:
-  properties:
-    topic: ${AUDIT_TOPIC:audit}
-
   boot:
     admin:
       client:
         url: ${ADMIN_CLIENT_URL:http://localhost:8081}
+
+kafka:
+  properties:
+    topic: ${AUDIT_TOPIC:audit}
 
 management:
   endpoints:

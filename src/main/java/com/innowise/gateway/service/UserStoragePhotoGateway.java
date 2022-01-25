@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserStoragePhotoGateway {
 
-    Mono<UserPhotoResponse> saveUserPhoto(SaveUserPhotoRequest saveUserPhotoRequest);
+    Mono<UserPhotoResponse> savePhoto(SaveUserPhotoRequest saveUserPhotoRequest);
 }
